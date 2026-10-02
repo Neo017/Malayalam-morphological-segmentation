@@ -53,61 +53,36 @@ The core recipe uses [ByT5](https://github.com/google-research/byt5), a byte-lev
 
 ## What the model does
 
-Input:
+The model maps an agglutinated Malayalam surface form to the project’s annotated component representation. These are the exact five examples supplied for this project.
+
+| Surface form | Annotated split |
+|---|---|
+| `ഭരണനേട്ടങ്ങളൊന്നുമില്ലാതെയാണ്‌` | `ഭരണനേട്ടങ്ങൾ + ഒന്നും + ഇല്ലാതെ + ആണ്` |
+| `വ്യാപൃതരാവേണ്ടിയിരിക്കുന്നുവെന്നും` | `വ്യാപൃതർ + ആവേണ്ടി + ഇരിക്കുന്നു + എന്നും` |
+| `വ്യക്തമായിരിക്കുന്നതെന്ന്കമ്പനി` | `വ്യക്തം + ആയിരിക്കുന്നത് + എന്ന് + കമ്പനി` |
+| `ജീവാത്മസ്വരൂപത്തെയറിഞ്ഞുകൊൾവാനുളള` | `ജീവാത്മ + സ്വരൂപത്തെ + അറിഞ്ഞുകൊൾവാൻ + ഉള്ള` |
+| `വാഹനങ്ങളുണ്ടാക്കുന്നതെന്നായിരുന്നു` | `വാഹനങ്ങൾ + ഉണ്ടാക്കുന്നത് + എന്ന് + ആയിരുന്നു` |
+
+The same examples in annotation-review notation:
 
 ```text
-പുസ്തകങ്ങളിലേക്കും
+ഭരണനേട്ടങ്ങളൊന്നുമില്ലാതെയാണ്‌ → ഭരണനേട്ടങ്ങൾ + ഒന്നും + ഇല്ലാതെ + ആണ്
+വ്യാപൃതരാവേണ്ടിയിരിക്കുന്നുവെന്നും → വ്യാപൃതർ + ആവേണ്ടി + ഇരിക്കുന്നു + എന്നും
+വ്യക്തമായിരിക്കുന്നതെന്ന്കമ്പനി → വ്യക്തം + ആയിരിക്കുന്നത് + എന്ന് + കമ്പനി
+ജീവാത്മസ്വരൂപത്തെയറിഞ്ഞുകൊൾവാനുളള → ജീവാത്മ + സ്വരൂപത്തെ + അറിഞ്ഞുകൊൾവാൻ + ഉള്ള
+വാഹനങ്ങളുണ്ടാക്കുന്നതെന്നായിരുന്നു → വാഹനങ്ങൾ + ഉണ്ടാക്കുന്നത് + എന്ന് + ആയിരുന്നു
 ```
 
-Target segmentation:
+These are normalised linguistic annotations: a target component sequence may not concatenate character-for-character back to the surface word because of Malayalam sandhi and allomorphy. The future dataset card must define the lemma policy, allomorph policy and inter-annotator agreement. These examples are project data, not automatically generated demonstrations.
 
-```text
-പുസ്തകം + കൾ + ഇലേക്ക് + ഉം
-```
+For machine-readable training data, store each pair in separate fields:
 
-The target notation is a readable annotation convention, not a claim that every analysis has only one linguistically valid segmentation. A future release should publish its annotation guidelines, lemma policy, allomorph policy and inter-annotator agreement.
-
-## Five solved examples
-
-These examples illustrate the intended output format for the project. They are documentation examples and are not presented as a released gold benchmark.
-
-| Surface word | Segmented analysis | Interpretation |
-|---|---|---|
-1. ഭരണനേട്ടങ്ങളൊന്നുമില്ലാതെയാണ്‌ → ഭരണനേട്ടങ്ങൾ + ഒന്നും + ഇല്ലാതെ + ആണ്
-2. വ്യാപൃതരാവേണ്ടിയിരിക്കുന്നുവെന്നും → വ്യാപൃതർ + ആവേണ്ടി + ഇരിക്കുന്നു + എന്നും
-3. വ്യക്തമായിരിക്കുന്നതെന്ന്കമ്പനി → വ്യക്തം + ആയിരിക്കുന്നത് + എന്ന് + കമ്പനി
-4. ജീവാത്മസ്വരൂപത്തെയറിഞ്ഞുകൊൾവാനുളള → ജീവാത്മ + സ്വരൂപത്തെ + അറിഞ്ഞുകൊൾവാൻ + ഉള്ള
-5. വാഹനങ്ങളുണ്ടാക്കുന്നതെന്നായിരുന്നു → വാഹനങ്ങൾ + ഉണ്ടാക്കുന്നത് + എന്ന് + ആയിരുന്നു
-Orthographic sandhi and morphophonemic alternation can make a surface form differ from its lemma. For this reason, the project supports two future targets: a conservative surface splitter and a linguistically normalised morpheme analyser. They should not be mixed without an explicit label.
-
-### Sentence-level sample format
-
-For sentence examples, use `|` between words and `+` between the morphemes/components of each word. The following five sentences show the intended readable format. They are illustrative analyses, not released gold annotations.
-
-```text
-Input:     കുട്ടികൾ സ്കൂളിലേക്ക് പോകുന്നു.
-Segmented: കുട്ടി + കൾ | സ്കൂൾ + ഇലേക്ക് | പോകുന്നു
-
-Input:     അധ്യാപകരോടുള്ള ചർച്ചകൾ വിജയകരമായിരുന്നു.
-Segmented: അധ്യാപകൻ + കൾ + ഓട് + ഉള്ള | ചർച്ച + കൾ | വിജയം + കരമായിരുന്നു
-
-Input:     മലയാളത്തിലും ഇംഗ്ലീഷിലും പുസ്തകങ്ങൾ ലഭ്യമാണ്.
-Segmented: മലയാളം + ത്തിൽ + ഉം | ഇംഗ്ലീഷ് + ഇൽ + ഉം | പുസ്തകം + കൾ | ലഭ്യം + ആണ്
-
-Input:     വീടുകളിലിരുന്ന് വിദ്യാർത്ഥികൾ പഠിക്കുന്നു.
-Segmented: വീട് + കൾ + ഇൽ + ഇരുന്നു | വിദ്യാർത്ഥി + കൾ | പഠിക്കുന്നു
-
-Input:     ഗവേഷകർ പുതിയ ഭാഷാസാങ്കേതികവിദ്യകൾ വികസിപ്പിക്കുന്നു.
-Segmented: ഗവേഷകൻ + കൾ | പുതിയത് | ഭാഷാ + സാങ്കേതികവിദ്യ + കൾ | വികസിപ്പിക്കുന്നു
-```
-
-For machine-readable data, store the input sentence and segmented sentence in separate fields, for example:
-
-```json
-{
-  "text": "കുട്ടികൾ സ്കൂളിലേക്ക് പോകുന്നു.",
-  "segmentation": "കുട്ടി + കൾ | സ്കൂൾ + ഇലേക്ക് | പോകുന്നു"
-}
+```jsonl
+{"word":"ഭരണനേട്ടങ്ങളൊന്നുമില്ലാതെയാണ്‌","segmentation":"ഭരണനേട്ടങ്ങൾ + ഒന്നും + ഇല്ലാതെ + ആണ്"}
+{"word":"വ്യാപൃതരാവേണ്ടിയിരിക്കുന്നുവെന്നും","segmentation":"വ്യാപൃതർ + ആവേണ്ടി + ഇരിക്കുന്നു + എന്നും"}
+{"word":"വ്യക്തമായിരിക്കുന്നതെന്ന്കമ്പനി","segmentation":"വ്യക്തം + ആയിരിക്കുന്നത് + എന്ന് + കമ്പനി"}
+{"word":"ജീവാത്മസ്വരൂപത്തെയറിഞ്ഞുകൊൾവാനുളള","segmentation":"ജീവാത്മ + സ്വരൂപത്തെ + അറിഞ്ഞുകൊൾവാൻ + ഉള്ള"}
+{"word":"വാഹനങ്ങളുണ്ടാക്കുന്നതെന്നായിരുന്നു","segmentation":"വാഹനങ്ങൾ + ഉണ്ടാക്കുന്നത് + എന്ന് + ആയിരുന്നു"}
 ```
 
 ## Features
