@@ -16,10 +16,10 @@ This creates several difficulties for a general-purpose subword tokenizer:
 4. **Unstable generalisation:** the model may learn a suffix as unrelated byte or subword fragments instead of recognising that it performs the same grammatical function across words.
 5. **Cross-model inconsistency:** different tokenizers can split the same Malayalam word differently, complicating retrieval, OCR correction, translation and evaluation.
 
-For example, an orthographic form such as `പുസ്തകങ്ങളിലേക്കും` represents a stem, plural marking, direction/case information and an additive clitic. A generic tokenizer may encode this as a long sequence of rare fragments. A morphology-aware representation can expose the reusable structure:
+For example, an orthographic form such as `ചലനാത്മകമാക്കേണ്ടതെങ്ങനെയാണെന്ന്` contains a lexical stem, causative/derivational material, a necessity form, a manner word, a copula and a quotative/complementizer. A generic tokenizer may encode this as a long sequence of rare fragments. A morphology-aware representation can expose the reusable structure:
 
 ```text
-പുസ്തകം + കൾ + ഇലേക്ക് + ഉം
+ചലനാത്മകം + ആക്കേണ്ടത് + എങ്ങനെ + ആണ് + എന്ന്
 ```
 
 The split is useful as an additional representation for training, retrieval or analysis. It does not replace the original surface word, and it does not mean that every analysis has one universally correct answer.
@@ -125,7 +125,7 @@ python scripts/train.py \
 ```bash
 python scripts/predict.py \
   --model runs/byt5-ml-segmentation \
-  --word പുസ്തകങ്ങളിലേക്കും
+  --word ചലനാത്മകമാക്കേണ്ടതെങ്ങനെയാണെന്ന്
 ```
 
 ### Evaluate
@@ -142,7 +142,7 @@ python scripts/evaluate.py \
 The planned dataset uses one example per line/row:
 
 ```json
-{"word": "പുസ്തകങ്ങളിലേക്കും", "segmentation": "പുസ്തകം + കൾ + ഇലേക്ക് + ഉം"}
+{"word": "ചലനാത്മകമാക്കേണ്ടതെങ്ങനെയാണെന്ന്", "segmentation": "ചലനാത്മകം + ആക്കേണ്ടത് + എങ്ങനെ + ആണ് + എന്ന്"}
 ```
 
 Recommended metadata kept alongside each example:
